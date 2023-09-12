@@ -5,16 +5,10 @@ Este repositorio contiene el código y la documentación relacionada con la vali
 Para visualizar el video explicativo de click en el siguiente [enlace](https://uniandes-my.sharepoint.com/:v:/g/personal/c_castillof_uniandes_edu_co/Ee9SBTt6O91LmQy7zFRC09wBikv_HPhU9lXSsOeEhd4I0w)
 
 ## Instrucciones para Realizar la Prueba
-Siga estos pasos para realizar la prueba utilizando los servicios creados para el ejemplo (Usuario, pruebas, registro de fallas y administrador):
+Siga estos pasos para realizar la prueba:
 
-1. Crear un Entorno Virtual
-python -m venv myenv
-2. Activar el Entorno Virtual (en Windows)
-myenv\Scripts\activate
-3. Activar el Entorno Virtual (en macOS/Linux)
-source myenv/bin/activate
-4. Instalar Flask
-pip install Flask
+1. Entrar al directorio del repositorio
+2. Realizar el siguiente comando "docker compose up -d"
 
 ## Configuración del API Gateway
 En este ejemplo, utilizamos la configuración proxy del servidor Nginx para implementar el componente API Gateway. Esta configuración permite que todas las solicitudes se hagan al servidor Nginx y este redireccione al servicio correspondiente de acuerdo a la operación y ruta especificada en el URL.
