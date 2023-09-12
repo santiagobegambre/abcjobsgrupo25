@@ -2,7 +2,7 @@
 Este repositorio contiene el código y la documentación relacionada con la validación del experimento realizado para ABC Jobs. El enfoque principal de este experimento es monitorear el componente de servicio de pruebas en un entorno controlado. Además, se busca establecer un sistema asincrónico para notificar las fallas detectadas a través de una plataforma de mensajería.
 
 ## Video Semana 5
-Para visualizar el video explicativo de click en el siguiente [enlace](https://www.youtube.com/)
+Para visualizar el video explicativo de click en el siguiente [enlace](https://uniandes-my.sharepoint.com/:v:/g/personal/c_castillof_uniandes_edu_co/Ee9SBTt6O91LmQy7zFRC09wBikv_HPhU9lXSsOeEhd4I0w)
 
 ## Instrucciones para Realizar la Prueba
 Siga estos pasos para realizar la prueba utilizando los servicios creados para el ejemplo (Usuario, pruebas, registro de fallas y administrador):
