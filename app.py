@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'Uniandes_2023*'  
+jwt = JWTManager(app)
 
 DATABASE = 'database.db'
 
@@ -72,7 +75,32 @@ def index():
 if __name__ == '__main__':
     app.run(debug=True)
 
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        data = request.json
+
+        if 'email' in data:
+            email = data['email']
+
+            conn = sqlite3.connect(DATABASE)
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, email FROM users WHERE email = ?', (email,))
+            user = cursor.fetchone()
+            conn.close()
+
+            if user:
+                user_id, user_email = user
+                access_token = create_access_token(identity=user_id)  
+                return jsonify({"access_token": access_token}), 200
+            else:
+                return jsonify({"error": "Usuario no encontrado"}), 404
+        else:
+            return jsonify({"error": "Datos JSON incompletos o incorrectos"}), 400
+
+
 @app.route('/add_user', methods=['POST'])
+@jwt_required()
 def add_user():
     if request.method == 'POST':
         data = request.json
@@ -97,6 +125,7 @@ def add_user():
             return jsonify({"error": "Datos JSON incompletos o incorrectos"}), 400
         
 @app.route('/user_test', methods=['POST'])
+@jwt_required()
 def user_test():
     if request.method == 'POST':
         data = request.json
@@ -131,6 +160,7 @@ def user_test():
             return jsonify({"error": "Datos JSON incompletos o incorrectos"}), 400
 
 @app.route('/registro_fallas', methods=['POST'])
+@jwt_required()
 def registro_fallas():
     if request.method == 'POST':
         data = request.json
@@ -180,6 +210,7 @@ def registro_fallas():
             return jsonify({"error": "Datos JSON incompletos o incorrectos"}), 400
 
 @app.route('/administrador', methods=['GET'])
+@jwt_required()
 def get_administrator_records():
     data = request.json
 
@@ -204,32 +235,4 @@ def get_administrator_records():
         return jsonify(records)
     else:
         return jsonify({"message": "No se encontraron registros asociados al administrador especificado"}), 404
-
-# @app.route('/administrador', methods=['POST'])
-# def administrador():
-#     if request.method == 'POST':
-#         data = request.json
-
-#         if 'name' in data and 'email' in data and 'registro_id' in data and 'status' in data and 'prueba_id' in data and 'user_id' in data:
-#             name = data['name']
-#             email = data['email']
-#             registro_id = data['registro_id']
-#             status= data['status']
-#             prueba_id = data['prueba_id']
-#             user_id = data['user_id']
-
-#             conn = sqlite3.connect(DATABASE)
-#             cursor = conn.cursor()
-#             cursor.execute('''
-#                 INSERT INTO administrador (name, email, registro_id, status, prueba_id, user_id)
-#                 VALUES (?, ?, ?, ?, ?, ?)
-#             ''', (name, email, registro_id, status, prueba_id, user_id))
-#             conn.commit()
-#             conn.close()
-
-#             return jsonify({"message": "Administrador agregado exitosamente"})
-#         else:
-#             return jsonify({"error": "Datos JSON incompletos o incorrectos"}), 400
-        
-
 
