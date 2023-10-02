@@ -34,9 +34,9 @@ services:
       SERVER_PORT: 7000
       SERVER_HOST: receiver
     restart: always
-    # healthcheck:
-    #   interval: 10s
-    #   timeout: 5s
+    healthcheck:
+      interval: 10s
+      timeout: 5s
 
   receiver:
     container_name: receiver
@@ -57,3 +57,32 @@ services:
       RABBITMQ_ROUTING_KEY: dataqueue 
       RABBITMQ_EXCHANGE: exchange_test
 
+  usuarios:
+    volumes:
+      - ./usuarios/:/mnt/
+    build: ./usuarios
+    working_dir: /backend/
+    command: sh run_queries.sh
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 5000:443
+    volumes:
+      - ./nginx/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./nginx/localhost.key:/etc/ssl/private/localhost.key
+    depends_on:
+        - usuarios
+
+  certificador:
+    volumes:
+      - ./certificador/:/mnt/
+      - ./certificador/output:/backend/output
+    build: ./certificador
+    working_dir: /backend/
+    command: sh run.sh
+    env_file: 
+      - ./certificador/monitor.env
+    depends_on:
+        - usuarios

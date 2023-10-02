@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from werkzeug.serving import run_simple
+from OpenSSL import SSL
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = 'Uniandes_2023*'  
+app.config['JWT_SECRET_KEY'] = 'Uniandes_2023*'
 jwt = JWTManager(app)
-
 DATABASE = 'database.db'
 
 def create_table():
@@ -70,10 +71,11 @@ create_table()
 
 @app.route('/')
 def index():
-    return "¡Bienvenido a la aplicación de usuarios!"
+    return "Hola, mundo seguro con SSL/TLS en localhost!"
 
 if __name__ == '__main__':
     app.run(debug=True)
+    #app.run(ssl_context=('localhost.crt', 'localhost.key'))
 
 @app.route('/login', methods=['POST'])
 def login():
